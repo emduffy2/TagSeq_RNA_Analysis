@@ -1,0 +1,9 @@
+#Set up a project directory
+mkdir rnaseq_example
+
+#Go into that directory, create a raw data directory where all your sequence files will be loacated
+cd rnaseq_example
+mkdir 00-RawData #directory should contain a folder for each sample and the original fastq files for each sample are in the sample folder
+
+#Go into the raw data directory and create a sample sheet for the project (collect directory / sample names into a file)
+for i in [put the first letter of folders cotaining files; for example if all folders containing sequences started with with R# put R]*; do echo $i; done > ../samples.txt 
