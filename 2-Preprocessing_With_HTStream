@@ -1,0 +1,32 @@
+#create another directory where all preprocessing will occur
+mkdir 01-HTS_Preproc
+
+#We will be using HTStream to clean/process reads so load the HTStream module 
+#Now it's time to preprocess! Copy the below code into a file to run:
+
+start=`date +%s`
+echo $HOSTNAME
+echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
+
+sample=`sed "${SLURM_ARRAY_TASK_ID}q;d" samples.txt`
+
+outpath='01-HTS_Preproc'
+[[ -d ${outpath} ]] || mkdir ${outpath}
+[[ -d ${outpath}/${sample} ]] || mkdir ${outpath}/${sample}
+
+echo "SAMPLE: ${sample}"
+
+call="hts_Stats -U 00-RawData/${sample} -L 01-HTS_Preproc/${sample}.log -O | \
+      hts_CutTrim -S -A -L 01-HTS_Preproc/${sample}.log -a 11 -O | \
+      hts_Stats -S -A -L 01-HTS_Preproc/${sample}.log -O | \
+      hts_AdapterTrimmer -S -A -L 01-HTS_Preproc/${sample}.log -O | \
+      hts_Stats -S -A -L 01-HTS_Preproc/${sample}.log -O | \
+      hts_PolyATTrim -S -A -L 01-HTS_Preproc/${sample}.log -m 35 -O | \
+      hts_Stats -S -A -L 01-HTS_Preproc/${sample}.log -f -g -p  01-HTS_Preproc/${sample}"
+
+echo $call
+eval $call
+
+end=`date +%s`
+runtime=$((end-start))
+echo $runtime
