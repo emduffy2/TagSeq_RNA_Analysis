@@ -1,0 +1,7 @@
+#Load salmon
+
+#create index (use cdna file of your species)
+salmon index -t /work/anscgenomics/eduffy3/RNA_RachWay_3.1/Ovis_aries.Oar_v3.1.cdna.all.fa -i salmonquasi-indexes --type quasi
+
+#lets use salmon now (make sure you change filepaths to match your file locations)
+salmon quant -i salmonquasi-indexes --noLengthCorrection -l SF -r TrimmedB/samplename_Trimmed.fastq -o samplename_salmon_quant -k 31
